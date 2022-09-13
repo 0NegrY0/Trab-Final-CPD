@@ -5,8 +5,6 @@
 #include <ostream>
 #include <vector>
 
-enum POSICAO { GOL, ZAG, LESQ, LDIR, VOL, MESQ, MCEN, MDIR, MOFE, PESQ, PDIR, SEGATA, CA};
-
 class Registro
 {
     public: // elementos que podem ser acessados externamente
@@ -15,24 +13,36 @@ class Registro
 
         ~Registro(); // destrutor
 
-        std::string getNome();
-        std::string getNacionalidade();
-        std::string getClube();
-        POSICAO getPosicao();
-        int getIdade();
-        float getValor();
+       std::string getIssue();
+       std::string getType();
+       std::string getStoryLine();
+       std::string getEvent();
+       std::string getCoverDate();
+       std::string getReleaseDate();
+       std::string getWriter();
+       std::string getPenciler();
+       std::string getMainCharacters();
+       std::string getAntagonists();
+       std::string getSupportingCharacters();
 
         // sobrecarrega operador de escrita para permitir impressao via streams (i.e. std::cout << registro)
         friend std::ostream& operator<<(std::ostream& os, const Registro& reg);
 
     private: // elementos que somente podem ser acessados dentro da classe
 
-        std::string nome;
-        std::string nacionalidade;
-        std::string clube;
-        POSICAO posicao;
-        float valor;
-        int idade;
+        std::string issue;
+        std::string type;
+        std::string story_tile;
+        std::string storyline;
+        std::string event;
+        std::string cover_date;
+        std::string release_date;
+        std::string writer;
+        std::string penciler;
+        std::string main_characters;
+        std::string antagonists;
+        std::string supporting_characters;
 };
+
 
 #endif // REGISTRO_H
