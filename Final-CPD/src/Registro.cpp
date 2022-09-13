@@ -16,45 +16,31 @@ Registro::Registro(std::string linha)
     while (getline(iss, word, ';')) {
         row.push_back(word);
     }
+    
+    issue = row[0];
 
-    nome = row[0];
+    type = row[1];
 
-    posicao=GOL;
+    story_tile = row[2];
 
-//    posicao = row[1];
-    if(row[1].compare("Goleiro")==0)
-        posicao = GOL;
-    else if(row[1].compare("Zagueiro")==0)
-        posicao = ZAG;
-    else if(row[1].compare("Lateral Esq.")==0)
-        posicao = LESQ;
-    else if(row[1].compare("Lateral Dir.")==0)
-        posicao = LDIR;
-    else if(row[1].compare("Volante")==0)
-        posicao = VOL;
-    else if(row[1].compare("Meia Esquerda")==0)
-        posicao = MESQ;
-    else if(row[1].compare("Meia Central")==0)
-        posicao = MCEN;
-    else if(row[1].compare("Meia Direita")==0)
-        posicao = MDIR;
-    else if(row[1].compare("Meia Ofensivo")==0)
-        posicao = MOFE;
-    else if(row[1].compare("Ponta Esquerda")==0)
-        posicao = PESQ;
-    else if(row[1].compare("Ponta Direita")==0)
-        posicao = PDIR;
-     else if(row[1].compare("Seg. Atacante")==0)
-        posicao = SEGATA;
-    else if(row[1].compare("Centroavante")==0)
-        posicao = CA;
-    else
-        std::cout << "AQUI";
+    storyline = row[3];
 
-    idade = std::stoi(row[2]);
-    nacionalidade = row[3];
-    clube = row[4];
-    valor = std::stof(row[5]);
+    event = row[4];
+
+    cover_date = row [5];
+
+    release_date = row [6];
+
+    writer = row [7];
+
+    penciler = row[8];
+
+    main_characters = row[9];
+
+    antagonists = row[10];
+
+    supporting_characters = row [11];
+    
 }
 
 Registro::~Registro()
@@ -63,36 +49,56 @@ Registro::~Registro()
 }
 
 /// GET
-
-std::string Registro::getNome()
+std::string Registro::getIssue()
 {
-    return nome;
+    return issue;
 }
 
-std::string Registro::getNacionalidade()
+std::string Registro::getType()
 {
-    return nacionalidade;
+    return type;
 }
 
-std::string Registro::getClube()
+std::string Registro::getStoryLine()
 {
-    return clube;
+    return storyline;
 }
 
-POSICAO Registro::getPosicao()
+std::string Registro::getEvent()
 {
-    return posicao;
+    return event;
 }
 
-int Registro::getIdade()
+std::string Registro::getCoverDate()
 {
-    return idade;
+    return cover_date;
+}
+std::string Registro::getReleaseDate()
+{
+    return release_date;
+}
+std::string Registro::getWriter()
+{
+    return writer;
+}
+std::string Registro::getPenciler()
+{
+    return penciler;
+}
+std::string Registro::getMainCharacters()
+{
+    return main_characters;
+}
+std::string Registro::getAntagonists()
+{
+    return antagonists;
+}
+std::string Registro::getSupportingCharacters()
+{
+    return supporting_characters;
 }
 
-float Registro::getValor()
-{
-    return valor;
-}
+
 
 /// IMPRESSAO
 std::vector<std::string> strPOSICAO = {"GOL", "ZAG", "LESQ", "LDIR", "VOL", "MESQ", "MCEN", "MDIR", "MOFE", "PESQ", "PDIR", "2ATA", "CA"};
