@@ -23,3 +23,17 @@ void HandleInputFiles(){
         }
 
 }
+
+
+void separaLinha(std::string Linha){
+
+    std::vector<std::string> tokens;            //vetor de string para salvar os tokens
+
+    std::stringstream check(Linha);         //stringstream class check
+
+    std::string intermed;                       //criação de uma string intermediária
+
+    while(getline(check, intermed, ';')){
+        tokens.push_back(intermed);
+    }
+}
