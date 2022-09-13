@@ -32,7 +32,7 @@ class Registro
 
         std::string issue;
         std::string type;
-        std::string story_tile;
+        std::string story_title;
         std::string storyline;
         std::string event;
         std::string cover_date;
