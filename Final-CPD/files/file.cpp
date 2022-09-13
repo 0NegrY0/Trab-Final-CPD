@@ -36,4 +36,54 @@ void separaLinha(std::string Linha){
     while(getline(check, intermed, ';')){
         tokens.push_back(intermed);
     }
+    
+     //debug/////////////////////////////////////////
+
+    for(int i = 0; i < tokens.size(); i ++){
+        std::cout << tokens[i] << '\n'; 
+    }
+
+    ////////////////////////////////////////////////
+
+    for(int i = 0; i < tokens.size(); i ++){
+        switch(i%12){
+            case 0:
+                strcpy(Registro.issue, tokens[i]);
+                 break;
+            case 1:
+                strcpy(Registro.type, tokens[i]);
+                break;
+            case 2:
+                strcpy(Registro.story_title, tokens[i]);
+                break;
+            case 3:
+                strcpy(Registro.storyline, tokens[i]);
+                break;
+
+            case 4:
+                strcpy(Registro.event, tokens[i]);
+                break;
+            case 5:
+              strcpy(Registro.cover_data, tokens[i]);
+                break;
+            case 6:
+              strcpy(Registro.release_date, tokens[i]);
+                break;
+            case 7:
+               strcpy(Registro.writer, tokens[i]);
+                break;
+            case 8:
+               strcpy(Registro.penciler, tokens[i]);
+                break;
+            case 9:
+              strcpy(Registro.main_characters, tokens[i]);
+                break;
+            case 10:
+              strcpy(Registro.antagonists, tokens[i]);
+                break;
+            case 11:
+               strcpy(Registro.supporting characters, tokens[i]);
+                break;
+    }
+}
 }
