@@ -9,38 +9,53 @@
 
 Registro::Registro(std::string linha)
 {
-    std::vector<std::string> row;
-    std::string word;
+    std::vector<std::string> tokens;              //vetor de string para salvar os tokens
+    std::stringstream check1(linha);          //stringstream class check
+    std::string aux;                         //criação de uma string intermediária
 
-    std::istringstream iss(linha);
-    while (getline(iss, word, ';')) {
-        row.push_back(word);
+    while(getline(check1, aux, ';')){    //Separador: ';'
+        tokens.push_back(aux);          //armezena os tokens no vector de string tokens
     }
-    
-    issue = row[0];
-
-    type = row[1];
-
-    story_tile = row[2];
-
-    storyline = row[3];
-
-    event = row[4];
-
-    cover_date = row [5];
-
-    release_date = row [6];
-
-    writer = row [7];
-
-    penciler = row[8];
-
-    main_characters = row[9];
-
-    antagonists = row[10];
-
-    supporting_characters = row [11];
-    
+    for(int i = 0; i < tokens.size(); i ++){
+        switch(i%12){
+            case 0:
+                issue = tokens[i];
+                break;
+            case 1:
+                type = tokens[i];
+                break;
+            case 2:
+                story_title = tokens[i];
+                break;
+            case 3:
+                storyline = tokens[i];
+                break;
+            case 4:
+                event = tokens[i];
+                break;
+            case 5:
+                cover_date = tokens[i];
+                break;
+            case 6:
+                release_date = tokens[i];
+                break;
+            case 7:
+                writer = tokens[i];
+                break;
+            case 8:
+                penciler = tokens[i];
+                break;
+            case 9:
+                main_characters = tokens[i];
+                break;
+            case 10:
+                antagonists = tokens[i];
+                break;
+            case 11:
+                supporting_characters = tokens[i];
+                break;
+        }
+    }
 }
 
 Registro::~Registro()
@@ -96,16 +111,4 @@ std::string Registro::getAntagonists()
 std::string Registro::getSupportingCharacters()
 {
     return supporting_characters;
-}
-
-
-
-/// IMPRESSAO
-std::vector<std::string> strPOSICAO = {"GOL", "ZAG", "LESQ", "LDIR", "VOL", "MESQ", "MCEN", "MDIR", "MOFE", "PESQ", "PDIR", "2ATA", "CA"};
-
-std::ostream& operator<<(std::ostream& os, const Registro& reg)
-{
-    os << "-> " << reg.nome << " | " << strPOSICAO[reg.posicao] << " | clube: " << reg.clube << std::endl
-    << "   idade: " << reg.idade << " | nac: " << reg.nacionalidade << " | valor " << reg.valor << " mi EUR";
-    return os;
 }
