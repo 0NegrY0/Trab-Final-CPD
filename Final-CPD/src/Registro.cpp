@@ -9,12 +9,12 @@
 
 Registro::Registro(std::string linha)
 {
-    std::vector<std::string> tokens;              //vetor de string para salvar os tokens
-    std::stringstream check1(linha);          //stringstream class check
-    std::string aux;                         //criação de uma string intermediária
+    std::vector<std::string> tokens;        //vetor de string para salvar os tokens
+    std::stringstream check1(linha);        //stringstream class check
+    std::string aux;                        //criação de uma string intermediária
 
-    while(getline(check1, aux, ';')){    //Separador: ';'
-        tokens.push_back(aux);          //armezena os tokens no vector de string tokens
+    while(getline(check1, aux, ';')){       //Separador: ';'
+        tokens.push_back(aux);              //armezena os tokens no vector de string tokens
     }
     for(int i = 0; i < tokens.size(); i ++){
         switch(i%12){

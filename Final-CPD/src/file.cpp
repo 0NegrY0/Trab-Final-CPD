@@ -8,18 +8,20 @@
 using namespace std;
 
 void HandleInputFiles(){
-    int i;
+    int i, index = 0;
     string linha;
-    vector<Registro> data_in[NUM_ARQ];
     vector <ifstream> entrada;
     vector <string> NamesFiles({"Lista_Avengers.csv", "Daredevil.csv", "Lista_Fantastic-Four.csv",
                                 "Lista_Spider-Man.csv", "Lista_X-Men.csv", "Planilha_Comics.xlsx"});
 
     for(i=0;i<NUM_ARQ;i++)
         entrada[i].open("Data/"+NamesFiles[i]);
-        while (getline(entrada[i], linha))      // Le linha a linha
-        {
+        getline(entrada[i], linha);             //despreza a primeira linha
+        while (getline(entrada[i], linha)){     // Le linha a linha
             Registro reg(linha);                // Cria registro
-            data_in[i].push_back(reg);          // Coloca num vetor de registros
+            //trie                              //adiciona na trie
+            //ArqInv                            //adiciona no arquivo invertido
+            index++;
         }
+
 }

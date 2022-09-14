@@ -1,118 +1,130 @@
-#include "../Include/trie.h"
+/*#include "../Include/trie.h"
 
-// Iterative function to insert a key into a Trie
-void Trie::insert(string key)
-{
-    // start from the root node
-    Trie* curr = this;
-    for (int i = 0; i < key.length(); i++)
-    {
-        // create a new node if the path doesn't exist
-        if (curr->character[key[i]] == nullptr) {
-            curr->character[key[i]] = new Trie();
-        }
+// ---------------------------// Funcoes //--------------------------- //
+// -> SAVE_MOVIE_TRIE_TREE: dados uma trie tree, um nome de filme e sua posicao na lista de filmes,
+// a funcao encontra a posicao correta e insere o filme na arvore
+void Trie::save_trie_tree(char name[NAME_MAX], long position, FILE *trie_tree){
+    // -> VARIAVEIS
+    Trie search_node;
+    Trie son_node;
 
-        // go to the next node
-        curr = curr->character[key[i]];
-    }
+    int file_size;
+    int i = 0;
+    int flag = 0;
 
-    // mark the current node as a leaf
-    curr->isLeaf = true;
-}
+    long son_position;
+    long search_node_position;
 
-// Iterative function to search a key in a Trie. It returns true
-// if the key is found in the Trie; otherwise, it returns false
-bool Trie::search(string key)
-{
-    // return false if Trie is empty
-    if (this == nullptr) {
-        return false;
-    }
 
-    Trie* curr = this;
-    for (int i = 0; i < key.length(); i++)
-    {
-        // go to the next node
-        curr = curr->character[key[i]];
+    strupr(name);     // transforma todas as letras do nome para maiusculo
 
-        // if the string is invalid (reached end of a path in the Trie)
-        if (curr == nullptr) {
-            return false;
-        }
-    }
+    // Verifica se o arquivo esta vazio
+    fseek(trie_tree, 0, SEEK_END);
+    file_size = ftell(trie_tree);
 
-    // return true if the current node is a leaf and the
-    // end of the string is reached
-    return curr->isLeaf;
-}
 
-// Returns true if a given node has any children
-bool Trie::haveChildren(Trie const* curr)
-{
-    for (int i = 0; i < CHAR_SIZE; i++)
-    {
-        if (curr->character[i]) {
-            return true;    // child found
-        }
-    }
+    // Se o arquivo ja tiver nodos, e preciso buscar a posicao correta de insercao.
+    // Caso contrario, a insercao e feita diretamente
+    if(file_size != 0){
+        fseek(trie_tree, 0, SEEK_SET);
 
-    return false;
-}
 
-// Recursive function to delete a key in the Trie
-bool Trie::deletion(Trie*& curr, string key)
-{
-    // return if Trie is empty
-    if (curr == nullptr) {
-        return false;
-    }
+        while(flag == 0 && name[i] != '\0'){
+            search_node_position = ftell(trie_tree);
+            fread(&search_node, sizeof(Trie_node), 1, trie_tree);
 
-    // if the end of the key is not reached
-    if (key.length())
-    {
-        // recur for the node corresponding to the next character in the key
-        // and if it returns true, delete the current node (if it is non-leaf)
+            // Caso a letra buscada coincida com a letra avaliada no nodo
+            if(name[i] == search_node.letter){
+                i++;
 
-        if (curr != nullptr &&
-            curr->character[key[0]] != nullptr &&
-            deletion(curr->character[key[0]], key.substr(1)) &&
-            curr->isLeaf == false)
-        {
-            if (!haveChildren(curr))
-            {
-                delete curr;
-                curr = nullptr;
-                return true;
+                // Se o nodo possuir filhos, a busca continua
+                if(search_node.son_pos != -1){
+                    fseek(trie_tree, search_node.son_pos, SEEK_SET);
+
+                // Caso contrario, o filho e atualizado e passa-se a inserir o restante do nome na arvore
+                } else {
+                    if(name[i] != '\0'){
+                        fseek(trie_tree, 0, SEEK_END);
+
+                        search_node.son_pos = ftell(trie_tree);
+
+                        fseek(trie_tree, search_node_position, SEEK_SET);
+                        fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+
+                        fseek(trie_tree, 0, SEEK_END);
+                    }
+
+                    flag = 1;
+                }
+            // Caso a letra buscada venha antes da letra avaliada no nodo
+            } else if(name[i] < search_node.letter){
+                // Se o nodo possuir algum nodo a esquerda, a busca continua
+                if(search_node.left_pos != -1){
+                    fseek(trie_tree, search_node.left_pos, SEEK_SET);
+
+                // Caso contrario, o nodo e atualizado e passa-se a inserir o restante do nome na arvore
+                } else {
+                    if(name[i] != '\0'){
+                        fseek(trie_tree, 0, SEEK_END);
+
+                        search_node.left_pos = ftell(trie_tree);
+
+                        fseek(trie_tree, search_node_position, SEEK_SET);
+                        fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+
+                        fseek(trie_tree, 0, SEEK_END);
+                    }
+
+                    flag = 1;
+                }
+            // Caso a letra buscada venha depois da letra avaliada no nodo
+            } else {
+                // Se o nodo possuir algum nodo a direita, a busca continua
+                if(search_node.right_pos != -1){
+                    fseek(trie_tree, search_node.right_pos, SEEK_SET);
+                // Caso contrario, o nodo e atualizado e passa-se a inserir o restante do nome na arvore
+                } else {
+                    if(name[i] != '\0'){
+                        fseek(trie_tree, 0, SEEK_END);
+
+                        search_node.right_pos = ftell(trie_tree);
+
+                        fseek(trie_tree, search_node_position, SEEK_SET);
+                        fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+
+                        fseek(trie_tree, 0, SEEK_END);
+                    }
+
+                    flag = 1;
+                }
             }
-            else {
-                return false;
-            }
         }
+
+        fseek(trie_tree, 0, SEEK_END);      // vai para o final do arquivo para que as proximas letras possam ser inseridas
     }
 
-    // if the end of the key is reached
-    if (key.length() == 0 && curr->isLeaf)
-    {
-        // if the current node is a leaf node and doesn't have any children
-        if (!haveChildren(curr))
-        {
-            // delete the current node
-            delete curr;
-            curr = nullptr;
+    // Insercao do nome ou do resto dele
+    while(name[i] != '\0'){
+        // Seta as informacoes para cada novo nodo
+        son_node.letter = name[i];
+        son_position = ftell(trie_tree);
 
-            // delete the non-leaf parent nodes
-            return true;
+        // Verifica se e um nodo terminal ou nao
+        if(i == strlen(name) - 1){
+            son_node.file_position = position;
+            son_node.son_pos = -1;
+        } else {
+            son_node.file_position = -1;
+            son_node.son_pos = son_position + sizeof(Trie_node);
         }
 
-        // if the current node is a leaf node and has children
-        else {
-            // mark the current node as a non-leaf node (DON'T DELETE IT)
-            curr->isLeaf = false;
+        son_node.left_pos = -1;
+        son_node.right_pos = -1;
 
-            // don't delete its parent nodes
-            return false;
-        }
+        // Escreve o nodo no arquivo
+        fwrite(&son_node, sizeof(Trie_node), 1, trie_tree);
+
+        i++;
     }
-
-    return false;
 }
+*/
