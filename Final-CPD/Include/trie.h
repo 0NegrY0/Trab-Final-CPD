@@ -3,43 +3,48 @@
 
 #include "../include/Registro.h"
 #include <iostream>
+#include <cstdio>
+#include <cstring>
+#include <bits/types/FILE.h>  //TALVEZ MUDAR DPS
 
+#define BUFFER_MAX 400
 #define NAME_MAX 200
 
 using namespace std;
 
-// Define the character size
-#define CHAR_SIZE 128
-
-// A class to store a Trie node
-typedef unsigned long long int ullint;
 
 class Trie
 {
-public:
-    long file_position;
-    char letter;
+	public:
+		
+		void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree);
+		void searchByName(char nomeProcurado[NAME_MAX]);
+	
+	
 
-    long left_pos;
-    long son_pos;
-    long right_pos;
+	private:
+		typedef struct{
+		
+			long file_position;
+			char letter;
 
-    void save_trie_tree(char name[NAME_MAX], long position, FILE *trie_tree);
-
-    // Constructor
-    /*Trie(){
-        index = 0;
-        this->isLeaf = false;
-        for (int i = 0; i < CHAR_SIZE; i++)
-            this->character[i] = nullptr;
-    }
+			long left_pos;
+			long son_pos;
+			long right_pos;
+		} Trie_node
 
 
-
-    void insert(string);
-    bool deletion(Trie*&, string);
-    bool search(string);
-    bool haveChildren(Trie const*);*/
+		// Constructor
+		/*Trie(){
+			index = 0;
+			this->isLeaf = false;
+			for (int i = 0; i < CHAR_SIZE; i++)
+				this->character[i] = nullptr;
+		}
+		void insert(string);
+		bool deletion(Trie*&, string);
+		bool search(string);
+		bool haveChildren(Trie const*);*/
 };
 
 #endif // TRIE_H
