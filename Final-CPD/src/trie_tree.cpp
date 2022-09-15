@@ -151,3 +151,86 @@ void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree){
     }
 }
 
+
+void searchByName(char nomeProcurado[NAME_MAX]){
+
+    // -> VARIAVEIS
+    FILE *trie_tree;
+
+    Trie_node search_node;
+
+    int flag = 0;
+    int i = 0;
+
+
+    strdup(nomeProcurado);       // transforma todas as letras do nome para maiusculo
+
+    trie_tree = fopen("dados/trie_tree_names.bin", "rb");
+
+    if(trie_tree == NULL){
+        printf("Erro ao abrir o arquivo 'trie_tree.bin'\n");
+
+    }
+    
+    else {
+        // O prefixo ou nome e buscado na trie tree
+        while(nomeProcurado[i] != '\0' && flag == 0){
+            fread(&search_node, sizeof(Trie_node), 1, trie_tree);
+
+         // Caso a letra buscada no prefixo coincida com a letra avaliada no nodo
+            if(nomeProcurado[i] == search_node.letter){
+                
+                // Verifica se o nodo possui filhos para que continue-se a busca
+                if(search_node.son_pos != -1){
+                    fseek(trie_tree, search_node.son_pos, SEEK_SET);
+                    i++;
+                }
+                
+                else {
+                    flag = 1;
+                }
+            // Caso a letra buscada no prefixo venha antes da letra avaliada no nodo
+            }
+            
+            else if(nomeProcurado[i] < search_node.letter){
+                
+                // Verifica se o nodo possui algum nodo a esquerda para que continue-se a busca
+                if(search_node.left_pos != -1){
+                    fseek(trie_tree, search_node.left_pos, SEEK_SET);
+                }
+                
+                else {
+                    flag = 1;
+                }
+            // Caso a letra buscada no prefixo venha depois da letra avaliada no nodo
+            }
+            
+            else {
+                
+                // Verifica-se se o nodo possui algum nodo a direita para que continue-se a busca
+                if(search_node.right_pos != -1){
+                    fseek(trie_tree, search_node.right_pos, SEEK_SET);
+                }
+                
+                else {
+                    flag = 1;
+                }
+            }
+        }
+
+        // Caso o while pare porque o prefixo nao esta presente em nenhum filme ou o nome buscado nao
+        // exista, uma mensagem de erro e mostrada
+        if(flag == 1){
+            printf("Nao foi encontrado nenhum nome\n");
+        // Se nao, os proximos nodos sao percorridos em busca de todos os filmes que possuam tal prefixo ou nome
+        }
+
+        else{
+            printf("aqui teriam os nomes");
+        }
+        
+    }
+
+    fclose(trie_tree);
+}
+
