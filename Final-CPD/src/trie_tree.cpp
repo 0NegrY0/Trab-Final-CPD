@@ -22,8 +22,17 @@ typedef struct{
     long right_pos;
 } Trie_node;
 
-void iniciaTrie(){
-    ifstream trieBin("trieBin.bin", ios::binary);
+int iniciaTrie(){
+    fstream trieBin;
+    trieBin.open("trieBin.bin", ios::out | ios::in | ios::binary);
+
+    if(trieBin.is_open()){
+        return 0;
+    }
+    else{
+        cout << "Erro ao abrir arquivo\n";
+        return 1;
+    }
 }
 
 void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree, fstream trieBin){
@@ -35,12 +44,15 @@ void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree, fstream trieB
     int file_size;
     int i = 0;
     int flag = 0;
+    int erro;
 
     long son_position;
     long search_node_position;
 
     //DEIXAR LETRA EM MAIUSCULO
     strdup(name);
+
+    erro = iniciaTrie();
 
 
     //verifica se o arquivo esta vazio
@@ -67,9 +79,9 @@ void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree, fstream trieB
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-            fread(&search_node, sizeof(Trie_node), 1, trie_tree);
+            //fread(&search_node, sizeof(Trie_node), 1, trie_tree);
             
-            //trieBin.read(search_node, sizeof(Trie_node));  
+            trieBin.read(reinterpret_cast<char*>(&search_node), sizeof(Trie_node));  
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -98,8 +110,8 @@ void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree, fstream trieB
                         trieBin.seekg(search_node_position, trieBin.beg);
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
-                        //trieBin.write(&search_node, sizeof(Trie_node))
+                        //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+                        trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
                         //fseek(trie_tree, 0, SEEK_END);
@@ -134,7 +146,9 @@ void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree, fstream trieB
                         trieBin.seekg(search_node_position, trieBin.beg);
 
 
-                        fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+                        //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+                        trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
+
 
 
 
@@ -174,7 +188,8 @@ void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree, fstream trieB
 
 
 
-                        fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+                        //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
+                        trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
 
 
 
@@ -227,10 +242,15 @@ void saveTrie(char name[NAME_MAX], long position, FILE *trie_tree, fstream trieB
 
 
         // Escreve o nodo no arquivo
-        fwrite(&son_node, sizeof(Trie_node), 1, trie_tree);
+        //fwrite(&son_node, sizeof(Trie_node), 1, trie_tree);
+        trieBin.write(reinterpret_cast<char*> (&son_node), sizeof(Trie_node));
+
 
         i++;
     }
+
+    trieBin.close();
+
 }
 
 
@@ -244,6 +264,7 @@ void searchByName(char nomeProcurado[NAME_MAX], fstream trieBin){
 
     int flag = 0;
     int i = 0;
+    int erro;
 
 
     strdup(nomeProcurado);       // transforma todas as letras do nome para maiusculo
@@ -254,6 +275,8 @@ void searchByName(char nomeProcurado[NAME_MAX], fstream trieBin){
         printf("Erro ao abrir o arquivo 'trie_tree.bin'\n");
 
     }*/
+
+    erro = iniciaTrie();
 
     if(!(trieBin.is_open())){
         printf("Erro ao abrir o arquivo 'trie_tree.bin'\n");
@@ -268,7 +291,9 @@ void searchByName(char nomeProcurado[NAME_MAX], fstream trieBin){
             
             
             
-            fread(&search_node, sizeof(Trie_node), 1, trie_tree);
+            //fread(&search_node, sizeof(Trie_node), 1, trie_tree);
+            trieBin.read(reinterpret_cast<char*>(&search_node), sizeof(Trie_node));  
+
 
 
 
@@ -309,7 +334,7 @@ void searchByName(char nomeProcurado[NAME_MAX], fstream trieBin){
                 
                 // Verifica-se se o nodo possui algum nodo a direita para que continue-se a busca
                 if(search_node.right_pos != -1){
-                    fseek(trie_tree, search_node.right_pos, SEEK_SET);
+                    //fseek(trie_tree, search_node.right_pos, SEEK_SET);
                     trieBin.seekg(search_node.right_pos, trieBin.beg);
                 }
                 
@@ -332,7 +357,8 @@ void searchByName(char nomeProcurado[NAME_MAX], fstream trieBin){
         
     }
 
-    fclose(trie_tree);
+    //fclose(trie_tree);
+    trieBin.close();
 }
 
 
