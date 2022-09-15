@@ -1,8 +1,11 @@
 #ifndef REGISTRO_H
 #define REGISTRO_H
 
-#include <string>
-#include <ostream>
+#include "ArqInv.h"
+#include "trie.h"
+
+#include <iostream>
+#include <fstream>
 #include <vector>
 
 class Registro
@@ -44,5 +47,6 @@ class Registro
         std::string supporting_characters;
 };
 
+void HandleInputFiles();
 
 #endif // REGISTRO_H
