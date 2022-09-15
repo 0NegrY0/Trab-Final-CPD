@@ -1,13 +1,12 @@
 # depslib dependency file v1.0
-1663076373 source:c:\users\leona\downloads\final-cpd\main.cpp
+1663277927 source:c:\users\leona\downloads\final-cpd\main.cpp
+	"./Include/Registro.h"
+
+1663277938 c:\users\leona\downloads\final-cpd\include\registro.h
+	"ArqInv.h"
+	"trie.h"
 	<iostream>
 	<fstream>
-	"./include/Registro.h"
-	"./include/TabelaHash.h"
-
-1661825207 c:\users\leona\downloads\final-cpd\include\registro.h
-	<string>
-	<ostream>
 	<vector>
 
 1661825207 c:\users\leona\downloads\final-cpd\include\tabelahash.h
@@ -15,7 +14,7 @@
 	<list>
 	"../include/Registro.h"
 
-1663080200 source:c:\users\leona\downloads\final-cpd\src\registro.cpp
+1663276489 source:c:\users\leona\downloads\final-cpd\src\registro.cpp
 	"../include/Registro.h"
 	<iostream>
 	<sstream>
@@ -23,4 +22,23 @@
 1661825207 source:c:\users\leona\downloads\final-cpd\src\tabelahash.cpp
 	"../include/TabelaHash.h"
 	<iostream>
+
+1663112311 source:c:\users\leona\downloads\final-cpd\src\trie.cpp
+
+1663111999 c:\users\leona\downloads\final-cpd\include\trie.h
+	"../include/Registro.h"
+	<iostream>
+
+1663277817 source:c:\users\leona\downloads\final-cpd\src\file.cpp
+	"../Include/Registro.h"
+
+1663279037 source:c:\users\leona\downloads\final-cpd\src\arqinv.cpp
+
+1663279037 c:\users\leona\downloads\final-cpd\include\arqinv.h
+	"Registro.h"
+	<iostream>
+	<fstream>
+
+1660165765 c:\users\leona\downloads\final-cpd\include\utils.h
+	<sys/time.h>
 

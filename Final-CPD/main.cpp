@@ -1,12 +1,10 @@
-#include <iostream>
-#include <fstream>
+#include "./Include/Registro.h"
 
-#include "./include/Registro.h"
-#include "./include/TabelaHash.h"
+using namespace std;
 
 int main()
 {
     std::cout << "Trabalho Final CPD" << std::endl;
-
+    HandleInputFiles();
     return 0;
 }
