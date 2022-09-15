@@ -1,27 +1,42 @@
 #include "Registro.h"
 #include <iostream>
 #include <fstream>
-#include <ofstream>
+//#include <ofstream>
 
-typedef inv_writer invWriter;
-typedef inv_issue InvIssue;
+/** code:
+ *
+ * 0 -> writer
+ * 1 -> issue
+ *
+ * Is it Removed?
+ * T -> True
+ * F -> False
+ *
+ * -- -> addres does not exist.
+ *
+ * 0-writer-issuePtr-prox_writer-
+ * 1-removed-issue-prox_issue-
+ *
+ **/
 
 class ArqInv{
-    struct inv_writer{
-        char removed;
+    typedef struct inv_writer{
+        int code;
         std::string writer;
-        invIssue *issuePtr;
-        invWriter *prox_writer;
-    };
+        int issuePtr;
+        int prox_writer;
+    }invWriter;
 
-    struct inv_issue{
+    typedef struct inv_issue{
         std::string issue;
-        InvIssue *prox_issue;
-    };
+        bool removed;
+        int prox_issue;
+    }InvIssue;
 
     ArqInv(invWriter *node){
-        node->removed='F';
-        node->issuePtr = nullptr;
-        node->prox_writer = nullptr;
+        node->code = -1;
+        node->removed = false;
+        node->issuePtr = -1;
+        node->prox_writer = -1;
     }
 };
