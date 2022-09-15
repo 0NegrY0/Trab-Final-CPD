@@ -31,8 +31,22 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Include/ArqInv.h" />
+		<Unit filename="Include/Registro.h" />
+		<Unit filename="Include/Utils.h" />
+		<Unit filename="Include/trie.h" />
+		<Unit filename="main.cpp" />
+		<Unit filename="src/ArqInv.cpp" />
+		<Unit filename="src/Registro.cpp" />
+		<Unit filename="src/file.cpp" />
+		<Unit filename="src/trie.cpp" />
+		<Unit filename="src/trie2.cpp" />
+		<Unit filename="src/trie_tree.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
+			<code_completion />
+			<envvars />
+			<debugger />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>
