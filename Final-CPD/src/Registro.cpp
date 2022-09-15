@@ -112,3 +112,27 @@ std::string Registro::getSupportingCharacters()
 {
     return supporting_characters;
 }
+
+/// IMPRESSAO
+std::ostream& operator<<(std::ostream& os, const Registro& reg)
+{
+    os << reg.issue << " | " << reg.type << " | " << reg.story_title << " | "
+    << reg.storyline << " | " << reg.event << " | " << reg.cover_date << " | "
+    << reg.release_date << " | " << reg.writer << " | " << reg.penciler << " | "
+    << reg.main_characters << " | " << reg.antagonists << " | " << reg.supporting_characters << std::endl;
+    return os;
+}
+
+/*ISSUE;
+TYPE;
+STORY TITLE;
+STORYLINE;
+EVENT;
+COVER DATE;
+RELEASE DATE;
+WRITER;
+PENCILER;
+MAIN CHARACTERS;
+ANTAGONISTS;
+SUPPORTING CHARACTERS
+*/
