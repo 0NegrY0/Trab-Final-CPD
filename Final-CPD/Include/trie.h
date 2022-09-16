@@ -11,17 +11,15 @@
 
 using namespace std;
 
-
 class Trie
 {
 	public:
-		void saveTrie(string Issue, long position, string fileName);
-		void searchByName(string Issue, string fileName);
+		void saveTrie(string Issue, long position, fstream& trieBin);
+		void searchByName(string Issue, fstream& trieBin);
 	private:
 		typedef struct{
 			long file_position;
 			char letter;
-
 			long left_pos;
 			long son_pos;
 			long right_pos;
