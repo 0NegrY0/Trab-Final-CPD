@@ -24,9 +24,9 @@ long saveList(Registro data, fstream listaBin){
     return filePosition;
 }
 
-Registro leLista(long filePosition, fstream listaBin){
+Registro leLista(long fileId, fstream listaBin){
     bool found = false;
-    Registro procurado;
+    reg procurado;
 
     while( !found )
     {
@@ -34,7 +34,7 @@ Registro leLista(long filePosition, fstream listaBin){
         if( listaBin.eof() )  // eof bit gets set only after EOF is read from file
         break;
 
-        if(procurado.id = file)     //MUDAR
+        if(procurado.id = fileId)     //MUDAR
         {
         // handle found record
         found = true;
