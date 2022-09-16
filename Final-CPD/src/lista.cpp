@@ -17,6 +17,7 @@ long saveList(Registro data, fstream listaBin){
 
     long filePosition;
     filePosition = listaBin.tellg();
+    
 
     listaBin.write(reinterpret_cast<char*>(&data), sizeof(Registro));
 
@@ -24,9 +25,9 @@ long saveList(Registro data, fstream listaBin){
     return filePosition;
 }
 
-Registro leLista(long fileId, fstream listaBin){
+void leLista(long fileId, fstream listaBin){
     bool found = false;
-    reg procurado;
+    Registro procurado;
 
     while( !found )
     {
@@ -42,7 +43,7 @@ Registro leLista(long fileId, fstream listaBin){
     }
     if( !found )
     {
-        cerr << "Could not find the id - " << filePosition << "on the list" << endl;
+        cerr << "Could not find the id - " << fileId << "on the list" << endl;
         exit(EXIT_FAILURE);
     }
     else{
