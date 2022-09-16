@@ -1,11 +1,14 @@
 #include "../Include/Registro.h"
+#include "../Include/trie.h"
 
 #define NUM_ARQ 2       //Número de arquivos de entrada
 
 using namespace std;
 
 void HandleInputFiles(){
-    int i, index = 0;
+    Trie trie;
+    int i;
+    long index = 0;
     string linha, aux;
     ifstream entrada;
     vector <string> NamesFiles({"Lista_Avengers.csv", "Lista_Daredevil.csv", "Lista_Fantastic-Four.csv",
@@ -21,9 +24,9 @@ void HandleInputFiles(){
         }
         getline(entrada, linha);             //despreza a primeira linha
         while (getline(entrada, linha)){     // Le linha a linha
-            Registro reg(linha);                // Cria registro
-            //trie                              //adiciona na trie
-            //ArqInv                            //adiciona no arquivo invertido
+            Registro reg(linha);             // Cria registro
+            trie.saveTrie(reg.getIssue(), string_to_hash(reg.getIssue()));   //adiciona na trie
+            //ArqInv                         //adiciona no arquivo invertido
 
             ///std::cout << reg << endl;        //debug
 
@@ -31,5 +34,12 @@ void HandleInputFiles(){
         }
         entrada.close();
     }
+    trie.searchByName("Daredevil Vol 1 1");
+}
 
+long string_to_hash(string s){
+    int value = 0;
+    for (int i = 0; i < s.length(); i++)
+        value = 31 * value + s.at(i);
+    return value;
 }
