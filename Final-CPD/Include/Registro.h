@@ -47,6 +47,7 @@ class Registro
             std::string supporting_characters;
             
             long id;
+            long position;
         }reg;
 };
 
