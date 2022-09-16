@@ -3,11 +3,10 @@
 
 #define BUFFER_MAX 400
 #define NAME_MAX 200
-#define TRIE_BIN "binarios/trieBin.bin"
 
 using namespace std;
 
-void Trie::saveTrie(string Issue, long position){
+void Trie::saveTrie(string Issue, long position, string fileName){
     fstream trieBin;
     Trie_node search_node;
     Trie_node son_node;
@@ -17,6 +16,7 @@ void Trie::saveTrie(string Issue, long position){
     long son_position;
     long search_node_position;
     char name[NAME_MAX];
+    string TRIE_BIN = "binarios/" + fileName + ".bin";
 
     trieBin.open(TRIE_BIN);
     if(!trieBin.is_open()){
@@ -151,12 +151,13 @@ void Trie::saveTrie(string Issue, long position){
 ///---------------------------------------------------------------------------------------------------
 ///---------------------------------------------------------------------------------------------------
 ///---------------------------------------------------------------------------------------------------
-void Trie::searchByName(string Issue){
+void Trie::searchByName(string Issue, string fileName){
     fstream trieBin;
     char nomeProcurado[NAME_MAX];
     Trie_node search_node;
     int flag = 0;
     int i = 0, j;
+    string TRIE_BIN = "binarios/" + fileName + ".bin";
 
     for(j=0;j<Issue.size();j++)
         nomeProcurado[j] = Issue.at(j);

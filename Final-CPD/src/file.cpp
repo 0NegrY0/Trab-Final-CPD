@@ -12,11 +12,11 @@ void HandleInputFiles(){
     long index = 0;
     string linha, aux;
     ifstream entrada;
-    vector <string> NamesFiles({"Lista_Avengers.csv", "Lista_Daredevil.csv", "Lista_Fantastic-Four.csv",
-                                "Lista_Spider-Man.csv", "Lista_X-Men.csv", "Planilha_Comics.xlsx"});
+    vector <string> NamesFiles({"Lista_Avengers", "Lista_Daredevil", "Lista_Fantastic-Four",
+                                "Lista_Spider-Man", "Lista_X-Men"});
 
     for(i=0;i<NUM_ARQ;i++){
-        aux = "Data/"+NamesFiles[i];
+        aux = "Data/"+NamesFiles[i]+".csv";
         entrada.open(aux);
         if(!entrada.is_open()){
             cerr << "Could not open the file - '"
@@ -26,7 +26,7 @@ void HandleInputFiles(){
         getline(entrada, linha);             //despreza a primeira linha
         while (getline(entrada, linha)){     // Le linha a linha
             Registro reg(linha);             // Cria registro
-            trie.saveTrie(reg.getIssue(), reg_to_bin(reg));   //adiciona na trie
+            trie.saveTrie(reg.getIssue(), reg_to_bin(reg), NamesFiles[i]);   //adiciona na trie
             //ArqInv                         //adiciona no arquivo invertido
 
             ///std::cout << reg << endl;        //debug
@@ -35,7 +35,6 @@ void HandleInputFiles(){
         }
         entrada.close();
     }
-    trie.searchByName("Daredevil Vol 1 1");
 }
 
 long reg_to_bin(Registro reg){
