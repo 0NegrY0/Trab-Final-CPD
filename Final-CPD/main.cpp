@@ -1,4 +1,6 @@
 #include "./Include/Registro.h"
+#include "./Include/ArqInv.h"
+#include "./Include/trie.h"
 
 using namespace std;
 

@@ -3,7 +3,7 @@
 
 #define BUFFER_MAX 400
 #define NAME_MAX 200
-#define TRIE_BIN "trieBin.bin"
+#define TRIE_BIN "binarios/trieBin.bin"
 
 using namespace std;
 

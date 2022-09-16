@@ -1,4 +1,4 @@
-#include "Registro.h"
+/*#include "Registro.h"
 #include <iostream>
 #include <fstream>
 
@@ -22,4 +22,4 @@ class ArqInv{
     }
 
     //void InsertionInvArq(Registro::Registro reg, std::string NameFile);
-};
+};*/

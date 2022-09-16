@@ -122,17 +122,3 @@ std::ostream& operator<<(std::ostream& os, const Registro& reg)
     << reg.main_characters << " | " << reg.antagonists << " | " << reg.supporting_characters << std::endl;
     return os;
 }
-
-/*ISSUE;
-TYPE;
-STORY TITLE;
-STORYLINE;
-EVENT;
-COVER DATE;
-RELEASE DATE;
-WRITER;
-PENCILER;
-MAIN CHARACTERS;
-ANTAGONISTS;
-SUPPORTING CHARACTERS
-*/

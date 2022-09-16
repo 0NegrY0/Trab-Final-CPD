@@ -26,6 +26,7 @@ class Trie
 			long son_pos;
 			long right_pos;
 		} Trie_node;
+		long insertBin();
 };
 
 #endif // TRIE_H

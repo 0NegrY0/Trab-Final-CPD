@@ -48,6 +48,6 @@ class Registro
 };
 
 void HandleInputFiles();
-long string_to_hash(string s);
+long reg_to_bin(Registro reg);
 
 #endif // REGISTRO_H
