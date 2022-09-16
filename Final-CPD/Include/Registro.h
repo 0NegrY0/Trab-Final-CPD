@@ -32,19 +32,22 @@ class Registro
         friend std::ostream& operator<<(std::ostream& os, const Registro& reg);
 
     private: // elementos que somente podem ser acessados dentro da classe
-
-        std::string issue;
-        std::string type;
-        std::string story_title;
-        std::string storyline;
-        std::string event;
-        std::string cover_date;
-        std::string release_date;
-        std::string writer;
-        std::string penciler;
-        std::string main_characters;
-        std::string antagonists;
-        std::string supporting_characters;
+        typeder struct reg{
+            std::string issue;
+            std::string type;
+            std::string story_title;
+            std::string storyline;
+            std::string event;
+            std::string cover_date;
+            std::string release_date;
+            std::string writer;
+            std::string penciler;
+            std::string main_characters;
+            std::string antagonists;
+            std::string supporting_characters;
+            
+            long id;
+        }reg;
 };
 
 void HandleInputFiles();
