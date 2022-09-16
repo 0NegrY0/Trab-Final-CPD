@@ -48,5 +48,6 @@ class Registro
 };
 
 void HandleInputFiles();
+long string_to_hash(string s);
 
 #endif // REGISTRO_H
