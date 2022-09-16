@@ -32,7 +32,7 @@ class Registro
         friend std::ostream& operator<<(std::ostream& os, const Registro& reg);
 
     private: // elementos que somente podem ser acessados dentro da classe
-        typedef struct reg{
+        typedef struct str_reg{
             std::string issue;
             std::string type;
             std::string story_title;
