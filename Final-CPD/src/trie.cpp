@@ -6,8 +6,7 @@
 
 using namespace std;
 
-void Trie::saveTrie(string Issue, long position, string fileName){
-    fstream trieBin;
+void Trie::saveTrie(string Issue, long position, fstream& trieBin){
     Trie_node search_node;
     Trie_node son_node;
     int file_size;
@@ -16,13 +15,6 @@ void Trie::saveTrie(string Issue, long position, string fileName){
     long son_position;
     long search_node_position;
     char name[NAME_MAX];
-    string TRIE_BIN = "binarios/" + fileName + ".bin";
-
-    trieBin.open(TRIE_BIN);
-    if(!trieBin.is_open()){
-        cerr << "Could not open the file - '" << TRIE_BIN << "'" << endl;
-        exit(EXIT_FAILURE);
-    }
 
     for(j=0;j<Issue.size();j++)
         name[j] = Issue.at(j);
@@ -146,64 +138,53 @@ void Trie::saveTrie(string Issue, long position, string fileName){
         trieBin.write(reinterpret_cast<char*> (&son_node), sizeof(Trie_node));
         i++;
     }
-    trieBin.close();
 }
 ///---------------------------------------------------------------------------------------------------
 ///---------------------------------------------------------------------------------------------------
 ///---------------------------------------------------------------------------------------------------
-void Trie::searchByName(string Issue, string fileName){
-    fstream trieBin;
+void Trie::searchByName(string Issue, fstream& trieBin){
     char nomeProcurado[NAME_MAX];
     Trie_node search_node;
     int flag = 0;
     int i = 0, j;
-    string TRIE_BIN = "binarios/" + fileName + ".bin";
 
     for(j=0;j<Issue.size();j++)
         nomeProcurado[j] = Issue.at(j);
     nomeProcurado[j] = '\0';
     strdup(nomeProcurado);       // transforma todas as letras do nome para maiusculo
 
-    trieBin.open(TRIE_BIN);
-    if(!trieBin.is_open()){
-        cerr << "Could not open the file - '" << TRIE_BIN << "'" << endl;
-        exit(EXIT_FAILURE);
-    }
-    else {
-        // O prefixo ou nome e buscado na trie tree
-        while(nomeProcurado[i] != '\0' && flag == 0){
-            trieBin.read(reinterpret_cast<char*>(&search_node), sizeof(Trie_node));
-         // Caso a letra buscada no prefixo coincida com a letra avaliada no nodo
-            if(nomeProcurado[i] == search_node.letter){
-                // Verifica se o nodo possui filhos para que continue-se a busca
-                if(search_node.son_pos != -1){
-                    //fseek(trie_tree, search_node.son_pos, SEEK_SET);
-                    trieBin.seekg(search_node.son_pos, trieBin.beg);
-                    i++;
-                }
-                else
-                    flag = 1;
-            // Caso a letra buscada no prefixo venha antes da letra avaliada no nodo
+    // O prefixo ou nome e buscado na trie tree
+    while(nomeProcurado[i] != '\0' && flag == 0){
+        trieBin.read(reinterpret_cast<char*>(&search_node), sizeof(Trie_node));
+        // Caso a letra buscada no prefixo coincida com a letra avaliada no nodo
+        if(nomeProcurado[i] == search_node.letter){
+            // Verifica se o nodo possui filhos para que continue-se a busca
+            if(search_node.son_pos != -1){
+                //fseek(trie_tree, search_node.son_pos, SEEK_SET);
+                trieBin.seekg(search_node.son_pos, trieBin.beg);
+                i++;
             }
-            else if(nomeProcurado[i] < search_node.letter)
-                if(search_node.left_pos != -1)// Verifica se o nodo possui algum nodo a esquerda para que continue-se a busca
-                    trieBin.seekg(search_node.left_pos, trieBin.beg);
-                else
-                    flag = 1;
-            // Caso a letra buscada no prefixo venha depois da letra avaliada no nodo
             else
-                if(search_node.right_pos != -1)// Verifica-se se o nodo possui algum nodo a direita para que continue-se a busca
-                    trieBin.seekg(search_node.right_pos, trieBin.beg);//fseek(trie_tree, search_node.right_pos, SEEK_SET);
-                else
-                    flag = 1;
+                flag = 1;
+            // Caso a letra buscada no prefixo venha antes da letra avaliada no nodo
         }
-        // Caso o while pare porque o prefixo nao esta presente em nenhum filme ou o nome buscado nao
-        // exista, uma mensagem de erro e mostrada
-        if(flag == 1)
-            printf("Nao foi encontrado nenhum nome\n");
-        // Se nao, os proximos nodos sao percorridos em busca de todos os filmes que possuam tal prefixo ou nome
+        else if(nomeProcurado[i] < search_node.letter)
+            if(search_node.left_pos != -1)// Verifica se o nodo possui algum nodo a esquerda para que continue-se a busca
+                trieBin.seekg(search_node.left_pos, trieBin.beg);
+            else
+                flag = 1;
+            // Caso a letra buscada no prefixo venha depois da letra avaliada no nodo
         else
-            printf("aqui teriam os nomes");
+            if(search_node.right_pos != -1)// Verifica-se se o nodo possui algum nodo a direita para que continue-se a busca
+                trieBin.seekg(search_node.right_pos, trieBin.beg);//fseek(trie_tree, search_node.right_pos, SEEK_SET);
+            else
+                flag = 1;
     }
-    trieBin.close();
+    // Caso o while pare porque o prefixo nao esta presente em nenhum filme ou o nome buscado nao
+    // exista, uma mensagem de erro e mostrada
+    if(flag == 1)
+        printf("Nao foi encontrado nenhum nome\n");
+    // Se nao, os proximos nodos sao percorridos em busca de todos os filmes que possuam tal prefixo ou nome
+    else
+        printf("aqui teriam os nomes");
 }
