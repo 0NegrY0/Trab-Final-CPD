@@ -15,8 +15,8 @@ using namespace std;
 class Trie
 {
 	public:
-		void saveTrie(string Issue, long position);
-		void searchByName(string Issue);
+		void saveTrie(string Issue, long position, string fileName);
+		void searchByName(string Issue, string fileName);
 	private:
 		typedef struct{
 			long file_position;
