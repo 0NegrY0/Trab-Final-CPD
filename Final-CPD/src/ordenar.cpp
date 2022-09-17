@@ -1,185 +1,284 @@
-#include "../Include/Registro.h"
-#include "../Include/trie.h"
-#include <fstream>
-#include <string>
-
-
-#define NUM_ARQ 5       //N�mero de arquivos de entrada
-#define REG_BIN "binarios/registros.bin"
-
-
-#include<iostream>
+#include <iostream>
+ 
 using namespace std;
-struct BplusTree {
-   int *d;
-   BplusTree **child_ptr;
-   bool l;
-   int n;
-   long pos;
-}*r = NULL, *np = NULL, *x = NULL;
-
-
-///////////////////////////////////////////////////////////////
-BplusTree* init(){//to create nodes {
-   int i;
-   np = new BplusTree;
-   np->pos = 0;
-   np->d = new int[6];//order 6
-   np->child_ptr = new BplusTree *[7];
-   np->l = true;
-   np->n = 0;
-   for (i = 0; i < 7; i++) {
-      np->child_ptr[i] = NULL;
-   }
-   return np;
+ 
+#define MAX 4
+#define MIN 2
+ 
+struct btreeNode {
+    int val[MAX + 1], count;
+    long position[MAX + 1];
+    btreeNode *link[MAX + 1];
+};
+ 
+btreeNode *root;
+ 
+/* creating new node */
+btreeNode * createNode(int val, btreeNode *child, long position) {
+    btreeNode *newNode = new btreeNode;
+    newNode->val[1] = val;
+    newNode->position[1] = position;
+    newNode->count = 1;
+    newNode->link[0] = root;
+    newNode->link[1] = child;
+    return newNode;
 }
-
-void traverse(BplusTree *p){//traverse tree {
-   cout<<endl;
-   int i;
-   for (i = 0; i < p->n; i++) {
-      if (p->l == false) {
-         traverse(p->child_ptr[i]);
-      }
-      cout << " " << p->d[i];                           //devolve em ordem
-   }
-   if (p->l == false) {
-      traverse(p->child_ptr[i]);
-   }
-   cout<<endl;
+ 
+/* Places the value in appropriate position */
+void addValToNode(int val, int pos, btreeNode *node, btreeNode *child, long position) {
+    int j = node->count;
+    while (j > pos) {
+        node->val[j + 1] = node->val[j];
+        node->position[j + 1] = node->position[j];
+        node->link[j + 1] = node->link[j];
+        j--;
+    }
+    node->position[j + 1] = position;
+    node->val[j + 1] = val;
+    node->link[j + 1] = child;
+    node->count++;
 }
-
-void sort(int *p, int n){//sort the tree 
-   int i, j, t;
-   for (i = 0; i < n; i++) {
-      for (j = i; j <= n; j++) {
-         if (p[i] >p[j]) {
-            t = p[i];
-            p[i] = p[j];
-            p[j] = t;
-         }
-      }
-   }
+ 
+/* split the node */
+void splitNode(int val, int *pval, int pos, btreeNode *node,btreeNode *child, btreeNode **newNode, long position, long *Pposition) {
+    int median, j;
+ 
+    if (pos > MIN)
+        median = MIN + 1;
+    else
+        median = MIN;
+ 
+    *newNode = new btreeNode;
+    j = median + 1;
+    while (j <= MAX) {
+        (*newNode)->val[j - median] = node->val[j];
+        (*newNode)->position[j - median] = node->position[j];
+        (*newNode)->link[j - median] = node->link[j];
+        j++;
+    }
+    node->count = median;
+    (*newNode)->count = MAX - median;
+ 
+    if (pos <= MIN) {
+        addValToNode(val, pos, node, child, position);
+    }
+    else {
+        addValToNode(val, pos - median, *newNode, child, position);
+    }
+    *pval = node->val[node->count];
+    *Pposition = node->position[node->count];
+    (*newNode)->link[0] = node->link[node->count];
+    node->count--;
 }
-
-int split_child(BplusTree *x, int i) {
-   int j, mid;
-   BplusTree *np1, *np3, *y;
-   np3 = init();
-   np3->l = true;
-   if (i == -1) {
-      mid = x->d[2];
-      x->d[2] = 0;
-      x->n--;
-      np1 = init();
-      np1->l = false;
-      x->l = true;
-      for (j = 3; j < 6; j++) {
-         np3->d[j - 3] = x->d[j];
-         np3->child_ptr[j - 3] = x->child_ptr[j];
-         np3->n++;
-         x->d[j] = 0;
-         x->n--;
-      }
-      for (j = 0; j < 6; j++) {
-         x->child_ptr[j] = NULL;
-      }
-      np1->d[0] = mid;
-      np1->child_ptr[np1->n] = x;
-      np1->child_ptr[np1->n + 1] = np3;
-      np1->n++;
-      r = np1;
-   } else {
-      y = x->child_ptr[i];
-      mid = y->d[2];
-      y->d[2] = 0;
-      y->n--;
-      for (j = 3; j <6 ; j++) {
-         np3->d[j - 3] = y->d[j];
-         np3->n++;
-         y->d[j] = 0;
-         y->n--;
-      }
-      x->child_ptr[i + 1] = y;
-      x->child_ptr[i + 1] = np3;
-   }
-   return mid;
+ 
+/* sets the value val in the node */
+int setValueInNode(int val, int *pval,btreeNode *node, btreeNode **child, long position, long *Pposition) {
+ 
+    int pos;
+    if (!node) {
+        *pval = val;
+        *Pposition = position;
+        *child = NULL;
+        return 1;
+    }
+ 
+    if (val < node->val[1]) {
+        pos = 0;
+    }
+    else {
+        for (pos = node->count;
+            (val < node->val[pos] && pos > 1); pos--);
+        if (val == node->val[pos]) {
+            cout<<"Duplicates not allowed\n";
+            return 0;
+        }
+    }
+    if (setValueInNode(val, pval, node->link[pos], child, position, Pposition)) {
+        if (node->count < MAX) {
+            addValToNode(*pval, pos, node, *child, *Pposition);
+        }
+        else {
+            splitNode(*pval, pval, pos, node, *child, child, *Pposition, Pposition);
+            return 1;
+        }
+    }
+    return 0;
 }
-
-void insert(int a, long position) {
-   int i, t;
-   x = r;
-   if (x == NULL) {
-      r = init();
-      x = r;
-      
-   } else {
-      if (x->l== true && x->n == 6) {
-         t = split_child(x, -1);
-         x = r;
-         for (i = 0; i < (x->n); i++) {
-            if ((a >x->d[i]) && (a < x->d[i + 1])) {
-            i++;
-            break;
-         } else if (a < x->d[0]) {
-            break;
-         } else {
-            continue;
-         }
-      }
-      x = x->child_ptr[i];
-   } else {
-      while (x->l == false) {
-         for (i = 0; i < (x->n); i++) {
-            if ((a >x->d[i]) && (a < x->d[i + 1])) {
-               i++;
-               break;
-            } else if (a < x->d[0]) {
-               break;
-            } else {
-               continue;
+ 
+/* insert val in B-Tree */
+void insertion(int val, long position) {
+    int flag, i;
+    long Pposition;
+    btreeNode *child;
+ 
+    flag = setValueInNode(val, &i, root, &child, position, &Pposition);
+    if (flag)
+        root = createNode(i, child, position);
+}
+ 
+/* copy successor for the value to be deleted */
+void copySuccessor(btreeNode *myNode, int pos) {
+    btreeNode *dummy;
+    dummy = myNode->link[pos];
+ 
+    for (; dummy->link[0] != NULL;)
+        dummy = dummy->link[0];
+    myNode->val[pos] = dummy->val[1];
+    myNode->position[pos] = dummy->position[1];
+ 
+}
+ 
+ 
+/* shifts value from parent to right child */
+void doRightShift(btreeNode *myNode, int pos) {
+    btreeNode *x = myNode->link[pos];
+    int j = x->count;
+ 
+    while (j > 0) {
+        x->val[j + 1] = x->val[j];
+        x->position[j + 1] = x->position[j];
+        x->link[j + 1] = x->link[j];
+    }
+    x->val[1] = myNode->val[pos];
+    x->position[1] = myNode->position[pos];
+    x->link[1] = x->link[0];
+    x->count++;
+ 
+    x = myNode->link[pos - 1];
+    myNode->val[pos] = x->val[x->count];
+    myNode->position[pos] = x->position[x->count];
+    myNode->link[pos] = x->link[x->count];
+    x->count--;
+    return;
+}
+ 
+/* shifts value from parent to left child */
+void doLeftShift(btreeNode *myNode, int pos) {
+    int j = 1;
+    btreeNode *x = myNode->link[pos - 1];
+ 
+    x->count++;
+    x->val[x->count] = myNode->val[pos];
+    x->position[x->count] = myNode->position[pos];
+    x->link[x->count] = myNode->link[pos]->link[0];
+ 
+    x = myNode->link[pos];
+    myNode->val[pos] = x->val[1];
+    myNode->position[pos] = x->position[1];
+    x->link[0] = x->link[1];
+    x->count--;
+ 
+    while (j <= x->count) {
+        x->val[j] = x->val[j + 1];
+        x->position[j] = x->position[j + 1];
+        x->link[j] = x->link[j + 1];
+        j++;
+    }
+    return;
+}
+ 
+/* merge nodes */
+void mergeNodes(btreeNode *myNode, int pos) {
+    int j = 1;
+    btreeNode *x1 = myNode->link[pos], *x2 = myNode->link[pos - 1];
+ 
+    x2->count++;
+    x2->val[x2->count] = myNode->val[pos];
+    x2->position[x2->count] = myNode->position[pos];
+    x2->link[x2->count] = myNode->link[0];
+ 
+    while (j <= x1->count) {
+        x2->count++;
+        x2->val[x2->count] = x1->val[j];
+        x2->position[x2->count] = x1->position[j];
+        x2->link[x2->count] = x1->link[j];
+        j++;
+    }
+ 
+    j = pos;
+    while (j < myNode->count) {
+        myNode->val[j] = myNode->val[j + 1];
+        myNode->position[j] = myNode->position[j + 1];
+        myNode->link[j] = myNode->link[j + 1];
+        j++;
+    }
+    myNode->count--;
+    free(x1);
+}
+ 
+/* adjusts the given node */
+void adjustNode(btreeNode *myNode, int pos) {
+    if (!pos) {
+        if (myNode->link[1]->count > MIN) {
+            doLeftShift(myNode, 1);
+        }
+        else {
+            mergeNodes(myNode, 1);
+        }
+    }
+    else {
+        if (myNode->count != pos) {
+            if (myNode->link[pos - 1]->count > MIN) {
+                doRightShift(myNode, pos);
             }
-         }
-         if ((x->child_ptr[i])->n == 6) {
-            t = split_child(x, i);
-            x->d[x->n] = t;
-            x->n++;
-            continue;
-         } else {
-            x = x->child_ptr[i];
-         }
-      }
-   }
+            else {
+                if (myNode->link[pos + 1]->count > MIN) {
+                    doLeftShift(myNode, pos + 1);
+                }
+                else {
+                    mergeNodes(myNode, pos);
+                }
+            }
+        }
+        else {
+            if (myNode->link[pos - 1]->count > MIN)
+                doRightShift(myNode, pos);
+            else
+                mergeNodes(myNode, pos);
+        }
+    }
 }
-   x->d[x->n] = a;
-   sort(x->d, x->n);
-   x->n++;
-}
-///////////////////////////////////////////////////////////////////////////
-/*
-void openBPlus(){
-    fstream bplusBin;
+ 
+ 
 
-    bplusBin.open("bplusBin.bin");
-}
-
-void saveBPlus(fstream bplusBin, BplusTree *p){
-    bplusBin.seekg(0, bplusBin.beg);
-
-    bplusBin.write((char*) p, sizeof(BplusTree));                    //talvez &p
-}
-
-BplusTree* readBPlus(fstream bplusBin){
-    BplusTree *p;
-    
-    bplusBin.seekg(0, bplusBin.beg);
-
-    bplusBin.read((char*) p, sizeof(BplusTree));
-
-    return p;
+/* B-Tree Traversal */
+void traversal(btreeNode *myNode) {
+    int i;
+    if (myNode) {
+        for (i = 0; i < myNode->count; i++) {
+            traversal(myNode->link[i]);
+            cout<< myNode->val[i + 1]<<' ' << myNode->position[i + 1] << ' ';                      //saida
+        }
+        traversal(myNode->link[i]);
+    }
 }
 
-void closeBPlus(fstream bplusBin){
-    bplusBin.close();
+int main() {
+    int val, opt;
+    long position;
+    while (true) {
+        cout<<"1. Insertion\t";
+        cout<<"4. Traversal\n";
+        cout<<"5. Exit\nEnter your choice: ";
+        cin >> opt;
+        cout << endl;
+        switch (opt) {
+        case 1:
+            cout<<"Enter your input:";
+            cin >> val;
+            cin >> position;
+            insertion(val, position);
+            break;
+        
+        case 4:
+            traversal(root);
+            break;
+        case 5:
+            exit(0);
+        }
+        cout << endl;
+    }
+ 
+    system("pause");
 }
-*/
+
