@@ -1,5 +1,5 @@
-#include "../Include/Registro.h"
-#include "../Include/trie.h"
+#include "../include/Registro.h"
+#include "../include/trie.h"
 
 #define BUFFER_MAX 400
 #define NAME_MAX 200
@@ -52,13 +52,13 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
                         search_node.son_pos = trieBin.tellg();
 
                         //fseek(trie_tree, search_node_position, SEEK_SET);
-                        trieBin.seekg(search_node_position, trieBin.beg);
+                        trieBin.seekp(search_node_position, trieBin.beg);                                                                                  //mudei
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
                         trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
                         //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekg(0, trieBin.end);
+                        trieBin.seekp(0, trieBin.end);
                     }
                     flag = 1;
                 }
@@ -74,15 +74,15 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
                 else {
                     if(name[i] != '\0'){
                         //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekg(0, trieBin.end);
+                        trieBin.seekp(0, trieBin.end);                                                                                                  //mudei
                         //search_node.left_pos = ftell(trie_tree);
-                        search_node.left_pos = trieBin.tellg();
+                        search_node.left_pos = trieBin.tellp();                                                                                         //mudei
                         //fseek(trie_tree, search_node_position, SEEK_SET);
-                        trieBin.seekg(search_node_position, trieBin.beg);
+                        trieBin.seekp(search_node_position, trieBin.beg);                                                                               //mudei
                         //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
                         trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
                         //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekg(0, trieBin.end);
+                        trieBin.seekp(0, trieBin.end);                                                                                                  //mudei
                     }
                     flag = 1;
                 }
@@ -98,29 +98,29 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
                 else {
                     if(name[i] != '\0'){
                         //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekg(0, trieBin.end);
+                        trieBin.seekp(0, trieBin.end);                                                                                                  //mudei
                         //search_node.right_pos = ftell(trie_tree);
-                        search_node.right_pos = trieBin.tellg();
+                        search_node.right_pos = trieBin.tellp();                                                                                        //mudei
                         //fseek(trie_tree, search_node_position, SEEK_SET);
-                        trieBin.seekg(search_node_position, trieBin.beg);
+                        trieBin.seekp(search_node_position, trieBin.beg);                                                                               //mudei
                         //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
                         trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
                         //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekg(0, trieBin.end);
-                    }
+                        trieBin.seekp(0, trieBin.end);
+                    }                                                                                                                                   //mudei
                     flag = 1;
                 }
             }
         }
         //fseek(trie_tree, 0, SEEK_END);      // vai para o final do arquivo para que as proximas letras possam ser inseridas
-        trieBin.seekg(0, trieBin.end);
+        trieBin.seekp(0, trieBin.end);                                                                                                                  //mudei
     }
     // Insercao do nome ou do resto dele
     while(name[i] != '\0'){
         // Seta as informacoes para cada novo nodo
         son_node.letter = name[i];
         //son_position = ftell(trie_tree);
-        son_position = trieBin.tellg();
+        son_position = trieBin.tellp();                                                                                                                 //mudei
         // Verifica se e um nodo terminal ou nao
         if(i == strlen(name) - 1){
             son_node.file_position = position;
