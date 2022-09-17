@@ -1,7 +1,8 @@
 #include "../Include/Registro.h"
 #include "../Include/trie.h"
+#include <string>
 
-#define NUM_ARQ 5       //Número de arquivos de entrada
+#define NUM_ARQ 5       //Nï¿½mero de arquivos de entrada
 #define REG_BIN "binarios/registros.bin"
 #define TRIE_BIN "binarios/trie.bin"
 
@@ -57,4 +58,23 @@ long reg_to_bin(Registro reg, fstream& regBin){
     long file_position =(long)regBin.tellg();
     regBin.write((char*)&reg, sizeof(reg));
     return file_position;
+}
+
+Registro ret_from_bin(long file_position, fstream& regBin){
+    string linha;
+    Registro reg(linha);
+    
+    regBin.seekg(file_position, regBin.beg);
+    
+    regBin.read((char*)&reg, sizeof(reg));
+
+    return reg;
+}
+
+void printReg(Registro reg){
+      
+    cout << "Issue - " << reg.getIssue()  << "\nType - " << reg.getType() << "\nStoryLine - " <<reg.getStoryLine() 
+    << "\nEvent - " << reg.getEvent() << "\nCover Date - " << reg.getCoverDate()  << "\nRelease Date - " << reg.getReleaseDate()
+    << "\nWriter - " << reg.getWriter() << "\nPenciler - " << reg.getPenciler() << "\nMain characters - " << reg.getMainCharacters()
+    << "\nAntagonists - " << reg.getAntagonists() << "\nSupporting Characters - " << reg.getSupportingCharacters() << std::endl;
 }
