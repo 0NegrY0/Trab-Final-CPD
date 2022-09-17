@@ -7,7 +7,7 @@
 #include <cstring>
 
 #define BUFFER_MAX 400
-#define NAME_MAX 200
+#define NAME_MAX 256
 
 using namespace std;
 
@@ -15,7 +15,7 @@ class Trie
 {
 	public:
 		void saveTrie(string Issue, long position, fstream& trieBin);
-		void searchByName(string Issue, fstream& trieBin);
+		long searchByName(string Issue, fstream& trieBin);
 	private:
 		typedef struct{
 			long file_position;
@@ -24,7 +24,6 @@ class Trie
 			long son_pos;
 			long right_pos;
 		} Trie_node;
-		long insertBin();
 };
 
 #endif // TRIE_H
