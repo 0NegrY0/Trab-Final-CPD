@@ -20,8 +20,10 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
         name[j] = Issue.at(j);
     name[j] = '\0';
 
+    int aux = trieBin.tellg();
     trieBin.seekg(0, trieBin.end);
     file_size = trieBin.tellg();
+    trieBin.seekg(aux, trieBin.beg);
 
     // Se o arquivo ja tiver nodos, e preciso buscar a posicao correta de insercao.
     // Caso contrario, a insercao e feita diretamente
