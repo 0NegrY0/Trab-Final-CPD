@@ -1,8 +1,8 @@
-#include "../include/Registro.h"
-#include "../include/trie.h"
+#include "../Include/Registro.h"
+#include "../Include/trie.h"
 
 #define BUFFER_MAX 400
-#define NAME_MAX 200
+#define NAME_MAX 256
 
 using namespace std;
 
@@ -20,8 +20,6 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
         name[j] = Issue.at(j);
     name[j] = '\0';
 
-    strdup(name);//DEIXAR LETRA EM MAIUSCULO
-
     trieBin.seekg(0, trieBin.end);
     file_size = trieBin.tellg();
 
@@ -32,33 +30,23 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
         while(flag == 0 && name[i] != '\0'){
             search_node_position = trieBin.tellg();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            trieBin.read(reinterpret_cast<char*>(&search_node), sizeof(Trie_node));
+            trieBin.read((char*)&search_node, sizeof(Trie_node));
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
             // Caso a letra buscada coincida com a letra avaliada no nodo
             if(name[i] == search_node.letter){
                 i++;
                 // Se o nodo possuir filhos, a busca continua
                 if(search_node.son_pos != -1){
-                    //fseek(trie_tree, search_node.son_pos, SEEK_SET);
-                    trieBin.seekg(search_node.son_pos, trieBin.beg);
+                    trieBin.seekp(search_node.son_pos, trieBin.beg);
                 // Caso contrario, o filho e atualizado e passa-se a inserir o restante do nome na arvore
                 }
                 else {
                     if(name[i] != '\0'){
-                        //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekg(0, trieBin.end);
-
-                        //search_node.son_pos = ftell(trie_tree);
-                        search_node.son_pos = trieBin.tellg();
-
-                        //fseek(trie_tree, search_node_position, SEEK_SET);
-                        trieBin.seekp(search_node_position, trieBin.beg);                                                                                  //mudei
-///////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
-                        trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
-////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                        //fseek(trie_tree, 0, SEEK_END);
                         trieBin.seekp(0, trieBin.end);
+                        search_node.son_pos = trieBin.tellp();
+                        trieBin.seekp(search_node_position, trieBin.beg);
+                        trieBin.write((char*)&search_node, sizeof(Trie_node));
+                        trieBin.seekp(0,trieBin.end);
                     }
                     flag = 1;
                 }
@@ -67,22 +55,16 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
             else if(name[i] < search_node.letter){
                 // Se o nodo possuir algum nodo a esquerda, a busca continua
                 if(search_node.left_pos != -1){
-                    //fseek(trie_tree, search_node.left_pos, SEEK_SET);
-                    trieBin.seekg(search_node.left_pos, trieBin.beg);
+                    trieBin.seekp(search_node.left_pos, trieBin.beg);
                 // Caso contrario, o nodo e atualizado e passa-se a inserir o restante do nome na arvore
                 }
                 else {
                     if(name[i] != '\0'){
-                        //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekp(0, trieBin.end);                                                                                                  //mudei
-                        //search_node.left_pos = ftell(trie_tree);
-                        search_node.left_pos = trieBin.tellp();                                                                                         //mudei
-                        //fseek(trie_tree, search_node_position, SEEK_SET);
-                        trieBin.seekp(search_node_position, trieBin.beg);                                                                               //mudei
-                        //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
-                        trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
-                        //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekp(0, trieBin.end);                                                                                                  //mudei
+                        trieBin.seekp(0, trieBin.end);
+                        search_node.left_pos = trieBin.tellp();
+                        trieBin.seekp(search_node_position, trieBin.beg);
+                        trieBin.write((char*)&search_node, sizeof(Trie_node));
+                        trieBin.seekp(0, trieBin.end);
                     }
                     flag = 1;
                 }
@@ -91,38 +73,30 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
             else {
                 // Se o nodo possuir algum nodo a direita, a busca continua
                 if(search_node.right_pos != -1){
-                    //fseek(trie_tree, search_node.right_pos, SEEK_SET);
-                    trieBin.seekg(search_node.right_pos, trieBin.beg);
+                    trieBin.seekp(search_node.right_pos, trieBin.beg);
                 // Caso contrario, o nodo e atualizado e passa-se a inserir o restante do nome na arvore
                 }
                 else {
                     if(name[i] != '\0'){
-                        //fseek(trie_tree, 0, SEEK_END);
-                        trieBin.seekp(0, trieBin.end);                                                                                                  //mudei
-                        //search_node.right_pos = ftell(trie_tree);
-                        search_node.right_pos = trieBin.tellp();                                                                                        //mudei
-                        //fseek(trie_tree, search_node_position, SEEK_SET);
-                        trieBin.seekp(search_node_position, trieBin.beg);                                                                               //mudei
-                        //fwrite(&search_node, sizeof(Trie_node), 1, trie_tree);
-                        trieBin.write(reinterpret_cast<char*> (&search_node), sizeof(Trie_node));
-                        //fseek(trie_tree, 0, SEEK_END);
                         trieBin.seekp(0, trieBin.end);
-                    }                                                                                                                                   //mudei
+                        search_node.right_pos = trieBin.tellp();
+                        trieBin.seekp(search_node_position, trieBin.beg);
+                        trieBin.write((char*)&search_node, sizeof(Trie_node));
+                        trieBin.seekp(0, trieBin.end);
+                    }
                     flag = 1;
                 }
             }
         }
-        //fseek(trie_tree, 0, SEEK_END);      // vai para o final do arquivo para que as proximas letras possam ser inseridas
-        trieBin.seekp(0, trieBin.end);                                                                                                                  //mudei
+        // vai para o final do arquivo para que as proximas letras possam ser inseridas
+        trieBin.seekp(0, trieBin.end);
     }
     // Insercao do nome ou do resto dele
     while(name[i] != '\0'){
         // Seta as informacoes para cada novo nodo
         son_node.letter = name[i];
-        //son_position = ftell(trie_tree);
-        son_position = trieBin.tellp();                                                                                                                 //mudei
-        // Verifica se e um nodo terminal ou nao
-        if(i == strlen(name) - 1){
+        son_position = trieBin.tellp();
+        if(i == strlen(name) - 1){// Verifica se e um nodo terminal ou nao
             son_node.file_position = position;
             son_node.son_pos = -1;
         }
@@ -130,19 +104,17 @@ void Trie::saveTrie(string Issue, long position, fstream& trieBin){
             son_node.file_position = -1;
             son_node.son_pos = son_position + sizeof(Trie_node);
         }
-
         son_node.left_pos = -1;
         son_node.right_pos = -1;
         // Escreve o nodo no arquivo
-        //fwrite(&son_node, sizeof(Trie_node), 1, trie_tree);
-        trieBin.write(reinterpret_cast<char*> (&son_node), sizeof(Trie_node));
+        trieBin.write((char*)&son_node, sizeof(Trie_node));
         i++;
     }
 }
 ///---------------------------------------------------------------------------------------------------
 ///---------------------------------------------------------------------------------------------------
 ///---------------------------------------------------------------------------------------------------
-void Trie::searchByName(string Issue, fstream& trieBin){
+long Trie::searchByName(string Issue, fstream& trieBin){
     char nomeProcurado[NAME_MAX];
     Trie_node search_node;
     int flag = 0;
@@ -151,16 +123,15 @@ void Trie::searchByName(string Issue, fstream& trieBin){
     for(j=0;j<Issue.size();j++)
         nomeProcurado[j] = Issue.at(j);
     nomeProcurado[j] = '\0';
-    strdup(nomeProcurado);       // transforma todas as letras do nome para maiusculo
 
+    trieBin.seekg(0, trieBin.beg);
     // O prefixo ou nome e buscado na trie tree
     while(nomeProcurado[i] != '\0' && flag == 0){
-        trieBin.read(reinterpret_cast<char*>(&search_node), sizeof(Trie_node));
+        trieBin.read((char*)&search_node, sizeof(Trie_node));
         // Caso a letra buscada no prefixo coincida com a letra avaliada no nodo
         if(nomeProcurado[i] == search_node.letter){
             // Verifica se o nodo possui filhos para que continue-se a busca
             if(search_node.son_pos != -1){
-                //fseek(trie_tree, search_node.son_pos, SEEK_SET);
                 trieBin.seekg(search_node.son_pos, trieBin.beg);
                 i++;
             }
@@ -183,8 +154,8 @@ void Trie::searchByName(string Issue, fstream& trieBin){
     // Caso o while pare porque o prefixo nao esta presente em nenhum filme ou o nome buscado nao
     // exista, uma mensagem de erro e mostrada
     if(flag == 1)
-        printf("Nao foi encontrado nenhum nome\n");
+        return -1;
     // Se nao, os proximos nodos sao percorridos em busca de todos os filmes que possuam tal prefixo ou nome
     else
-        printf("aqui teriam os nomes");
+        return search_node.file_position;
 }
