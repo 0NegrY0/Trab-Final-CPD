@@ -1,4 +1,7 @@
 #include <iostream>
+#include <string>
+
+#define MAX_NAME 200
  
 using namespace std;
  
@@ -6,7 +9,8 @@ using namespace std;
 #define MIN 2
  
 struct btreeNode {
-    int val[MAX + 1], count;
+    string val[MAX + 1];
+    int count;
     long position[MAX + 1];
     btreeNode *link[MAX + 1];
 };
@@ -14,7 +18,7 @@ struct btreeNode {
 btreeNode *root;
  
 /* creating new node */
-btreeNode * createNode(int val, btreeNode *child, long position) {
+btreeNode * createNode(string val, btreeNode *child, long position) {
     btreeNode *newNode = new btreeNode;
     newNode->val[1] = val;
     newNode->position[1] = position;
@@ -23,9 +27,15 @@ btreeNode * createNode(int val, btreeNode *child, long position) {
     newNode->link[1] = child;
     return newNode;
 }
+
+string char_to_string(char value[MAX_NAME]){
+    string s(value);
+    return s;
+}
+
  
 /* Places the value in appropriate position */
-void addValToNode(int val, int pos, btreeNode *node, btreeNode *child, long position) {
+void addValToNode(string val, int pos, btreeNode *node, btreeNode *child, long position) {
     int j = node->count;
     while (j > pos) {
         node->val[j + 1] = node->val[j];
@@ -40,7 +50,7 @@ void addValToNode(int val, int pos, btreeNode *node, btreeNode *child, long posi
 }
  
 /* split the node */
-void splitNode(int val, int *pval, int pos, btreeNode *node,btreeNode *child, btreeNode **newNode, long position, long *Pposition) {
+void splitNode(string val, string *pval, int pos, btreeNode *node,btreeNode *child, btreeNode **newNode, long position, long *Pposition) {
     int median, j;
  
     if (pos > MIN)
@@ -72,7 +82,7 @@ void splitNode(int val, int *pval, int pos, btreeNode *node,btreeNode *child, bt
 }
  
 /* sets the value val in the node */
-int setValueInNode(int val, int *pval,btreeNode *node, btreeNode **child, long position, long *Pposition) {
+int setValueInNode(string val, string *pval,btreeNode *node, btreeNode **child, long position, long *Pposition) {
  
     int pos;
     if (!node) {
@@ -106,21 +116,18 @@ int setValueInNode(int val, int *pval,btreeNode *node, btreeNode **child, long p
 }
  
 /* insert val in B-Tree */
-void insertion(int val, long position, int first) {
-    int flag, i;
+void insertion(string val, long position) {
+    int flag;
+    string i;
     long Pposition;
     btreeNode *child;
  
     flag = setValueInNode(val, &i, root, &child, position, &Pposition);
-    if (flag){
-        if(first == 1)
-            root = createNode(i, child, position);
-        else{
-            root = createNode(i, child, Pposition);
-        }
-
-    }
+    if (flag)
+        root = createNode(i, child, position);
 }
+ 
+
  
  
 /* shifts value from parent to right child */
@@ -171,6 +178,9 @@ void doLeftShift(btreeNode *myNode, int pos) {
     return;
 }
  
+ 
+
+
 /* B-Tree Traversal */
 void traversal(btreeNode *myNode) {
     int i;
@@ -183,16 +193,10 @@ void traversal(btreeNode *myNode) {
     }
 }
 
-void chamaFuncao(long position, int dado, Registro reg){
-    int i = 0;
-
-
-}
-
 int main() {
-    int val, opt;
+    int opt;
+    string val;
     long position;
-    int first;
     while (true) {
         cout<<"1. Insertion\t";
         cout<<"4. Traversal\n";
@@ -204,8 +208,7 @@ int main() {
             cout<<"Enter your input:";
             cin >> val;
             cin >> position;
-            cin >> first;
-            insertion(val, position, first);
+            insertion(val, position);
             break;
         
         case 4:
