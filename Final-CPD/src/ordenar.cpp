@@ -106,26 +106,20 @@ int setValueInNode(int val, int *pval,btreeNode *node, btreeNode **child, long p
 }
  
 /* insert val in B-Tree */
-void insertion(int val, long position) {
+void insertion(int val, long position, int first) {
     int flag, i;
     long Pposition;
     btreeNode *child;
  
     flag = setValueInNode(val, &i, root, &child, position, &Pposition);
-    if (flag)
-        root = createNode(i, child, position);
-}
- 
-/* copy successor for the value to be deleted */
-void copySuccessor(btreeNode *myNode, int pos) {
-    btreeNode *dummy;
-    dummy = myNode->link[pos];
- 
-    for (; dummy->link[0] != NULL;)
-        dummy = dummy->link[0];
-    myNode->val[pos] = dummy->val[1];
-    myNode->position[pos] = dummy->position[1];
- 
+    if (flag){
+        if(first == 1)
+            root = createNode(i, child, position);
+        else{
+            root = createNode(i, child, Pposition);
+        }
+
+    }
 }
  
  
@@ -189,9 +183,16 @@ void traversal(btreeNode *myNode) {
     }
 }
 
+void chamaFuncao(long position, int dado, Registro reg){
+    int i = 0;
+
+
+}
+
 int main() {
     int val, opt;
     long position;
+    int first;
     while (true) {
         cout<<"1. Insertion\t";
         cout<<"4. Traversal\n";
@@ -203,7 +204,8 @@ int main() {
             cout<<"Enter your input:";
             cin >> val;
             cin >> position;
-            insertion(val, position);
+            cin >> first;
+            insertion(val, position, first);
             break;
         
         case 4:
