@@ -1,0 +1,50 @@
+# depslib dependency file v1.0
+1663289641 source:c:\users\leona\downloads\final-cpd\main.cpp
+	"./Include/Registro.h"
+	"./Include/ArqInv.h"
+	"./Include/trie.h"
+
+1663294417 c:\users\leona\downloads\final-cpd\include\registro.h
+	"ArqInv.h"
+	"trie.h"
+	<iostream>
+	<fstream>
+	<vector>
+
+1661825207 c:\users\leona\downloads\final-cpd\include\tabelahash.h
+	<vector>
+	<list>
+	"../include/Registro.h"
+
+1663294307 source:c:\users\leona\downloads\final-cpd\src\registro.cpp
+	"../include/Registro.h"
+	<iostream>
+	<sstream>
+
+1661825207 source:c:\users\leona\downloads\final-cpd\src\tabelahash.cpp
+	"../include/TabelaHash.h"
+	<iostream>
+
+1663294938 source:c:\users\leona\downloads\final-cpd\src\trie.cpp
+	"../Include/Registro.h"
+	"../Include/trie.h"
+
+1663294496 c:\users\leona\downloads\final-cpd\include\trie.h
+	"../include/Registro.h"
+	<iostream>
+	<cstdio>
+	<cstring>
+
+1663294938 source:c:\users\leona\downloads\final-cpd\src\file.cpp
+	"../Include/Registro.h"
+	"../Include/trie.h"
+
+1663279037 source:c:\users\leona\downloads\final-cpd\src\arqinv.cpp
+
+1663279941 c:\users\leona\downloads\final-cpd\include\arqinv.h
+	<iostream>
+	<fstream>
+
+1660165765 c:\users\leona\downloads\final-cpd\include\utils.h
+	<sys/time.h>
+
